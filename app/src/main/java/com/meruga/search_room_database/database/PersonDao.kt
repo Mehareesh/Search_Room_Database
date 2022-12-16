@@ -7,18 +7,12 @@ import androidx.room.*
 interface PersonDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addPerson(person: Person)
-
-    @Update
-    suspend fun updatePerson(person: Person)
-
-    @Delete
-    suspend fun deletePerson(person: Person)
+    suspend fun insertData(person: Person)
 
     @Query("SELECT * FROM person_table ORDER BY id ASC")
     fun readAllPersons(): LiveData<List<Person>>
 
-    @Query("DELETE FROM person_table")
-    suspend fun deleteAllPersons()
+    @Query("SELECT * FROM person_table WHERE firstName LIKE :searchQuery OR lastName Like :searchQuery")
+    fun searchDatabase(searchQuery: String): LiveData<List<Person>>
 
 }

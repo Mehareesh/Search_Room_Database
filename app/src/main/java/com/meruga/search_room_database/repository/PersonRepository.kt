@@ -6,21 +6,15 @@ import com.meruga.search_room_database.database.PersonDao
 
 class PersonRepository(private val personDao: PersonDao) {
 
-    val readAllData: LiveData<List<Person>> = personDao.readAllPersons()
-
-    suspend fun addPerson(person: Person) {
-        personDao.addPerson(person)
+    fun readAllPersons(): LiveData<List<Person>> {
+        return personDao.readAllPersons()
     }
 
-    suspend fun updatePerson(person: Person) {
-        personDao.updatePerson(person)
+    suspend fun insertData(person: Person) {
+        personDao.insertData(person)
     }
 
-    suspend fun deletePerson(person: Person) {
-        personDao.deletePerson(person)
-    }
-
-    suspend fun deleteAllPersons() {
-        personDao.deleteAllPersons()
+    fun searchDatabase(searchQuery: String): LiveData<List<Person>> {
+        return personDao.searchDatabase(searchQuery)
     }
 }
