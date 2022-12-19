@@ -10,5 +10,6 @@ data class Person(
     val id: Int,
     val firstName: String,
     val lastName: String,
-    val profilePicture: Bitmap
+    val age: Int
+    // val profilePicture: Bitmap
 )
