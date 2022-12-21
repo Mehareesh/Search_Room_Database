@@ -2,6 +2,8 @@ package com.meruga.search_room_database
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.meruga.search_room_database.adapter.PersonAdapter
@@ -9,7 +11,7 @@ import com.meruga.search_room_database.database.Person
 import com.meruga.search_room_database.databinding.ActivityMainBinding
 import com.meruga.search_room_database.viewmodel.PersonViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var personViewModel: PersonViewModel
@@ -30,6 +32,37 @@ class MainActivity : AppCompatActivity() {
         }
         personViewModel.readAllPersons.observe(this) {
             personAdapter.setData(it)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+
+        val search = menu?.findItem(R.id.menu_search)
+        val searchView = search?.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+        return true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if(query != null){
+            searchDatabase(query)
+        }
+        return true
+    }
+
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
+
+        personViewModel.searchDatabase(searchQuery).observe(this) { list ->
+            list.let {
+                personAdapter.setData(it)
+            }
         }
     }
 
